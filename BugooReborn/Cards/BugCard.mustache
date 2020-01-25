@@ -1,0 +1,112 @@
+﻿{
+	"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+	"type": "AdaptiveCard",
+	"version": "1.0",
+	"body": [
+		{
+			"type": "Container",
+			"items": [
+				{
+					"type": "TextBlock",
+					"text": "P{{Priority}} - {{Title}}",
+					"weight": "bolder",
+          "size": "medium",
+          "wrap": true
+				}
+			]
+		},
+		{
+			"type": "Container",
+			"items": [
+				{
+					"type": "FactSet",
+          "facts": [
+            {
+              "title": "ID:",
+              "value": "{{Id}}"
+            },
+            {
+              "title": "State:",
+              "value": "{{State}}"
+            },
+            {
+              "title": "Severity:",
+              "value": "{{Severity}}"
+            },
+            {
+              "title": "Assigned to:",
+{{#if AssignedTo}}
+              "value": "<at>{{AssignedTo.DisplayName}}</at>"
+{{#else}}
+              "value": "Unassigned"
+{{/if}}
+            },
+            {
+              "title": "EM owner:",
+{{#if EMOwner}}
+              "value": "<at>{{EMOwner.DisplayName}}</at>"
+{{#else}}
+              "value": "Unassigned"
+{{/if}}
+
+            },
+            {
+              "title": "PM owner:",
+{{#if PMOwner}}
+              "value": "<at>{{PMOwner.DisplayName}}</at>"
+{{#else}}
+              "value": "Unassigned"
+{{/if}}
+            }
+          ]
+				}
+			]
+		}
+	],
+	"actions": [
+		{
+			"type": "Action.OpenUrl",
+			"title": "View",
+			"url": "{{BugLink}}"
+		},
+    {
+			"type": "Action.OpenUrl",
+			"title": "💡",
+      "url": "https://aka.ms/bugoofeedback"		}
+
+	],
+    "msteams": {
+      "entities": [
+{{#if AssignedTo}}
+        {
+          "type": "mention",
+          "text": "<at>{{AssignedTo.DisplayName}}</at>",
+          "mentioned": {
+            "id": "{{AssignedTo.TeamsUserId}}",
+            "name": "{{AssignedTo.DisplayName}}"
+          }
+        }
+{{/if}}
+{{#if EMOwner}}
+        ,{
+          "type": "mention",
+          "text": "<at>{{EMOwner.DisplayName}}</at>",
+          "mentioned": {
+            "id": "{{EMOwner.TeamsUserId}}",
+            "name": "{{EMOwner.DisplayName}}"
+          }
+        }
+{{/if}}
+{{#if PMOwner}}
+        ,{
+          "type": "mention",
+          "text": "<at>{{PMOwner.DisplayName}}</at>",
+          "mentioned": {
+            "id": "{{PMOwner.TeamsUserId}}",
+            "name": "{{PMOwner.DisplayName}}"
+          }
+        }
+{{/if}}
+      ]
+    }
+}

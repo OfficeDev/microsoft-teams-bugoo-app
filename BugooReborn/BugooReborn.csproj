@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ApplicationInsightsResourceId>/subscriptions/fc7ebf7d-b3ae-45c2-9c08-67d0ae8ce012/resourcegroups/BugooV2/providers/microsoft.insights/components/BugooV2DF</ApplicationInsightsResourceId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Cards\BugCard.mustache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Cards\BugCard.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.7.0" />
+    <PackageReference Include="mustache-sharp" Version="1.0.0" />
+    <PackageReference Include="TransientFaultHandling.Core" Version="5.1.1209.1" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+    <ItemGroup>
+      <WCFMetadata Include="Connected Services" />
+    </ItemGroup>
+
+</Project>
