@@ -1,8 +1,7 @@
-﻿//----------------------------------------------------------------------------------------------
-// <copyright file="BugooBot.cs" company="Microsoft">
-// Copyright (c) Microsoft. All rights reserved.
-// </copyright>
-//----------------------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+//
+// Generated with Bot Builder V4 SDK Template for Visual Studio BugooBot v4.6.2
 
 namespace BugooReborn.Bots
 {
@@ -58,6 +57,14 @@ namespace BugooReborn.Bots
             {
                 case "nag":
                     var teamName = string.Join(' ', parts.Skip(1)); // Some team names can have spaces in them
+
+                    if (string.IsNullOrEmpty(teamName))
+                    {
+                        // Try to find the default team-name
+                        teamName = GetDefaultTeamName(turnContext, cancellationToken);
+                    }
+
+                    // Ask for a name it we couldn't find a default name
                     if (string.IsNullOrEmpty(teamName))
                     {
                         await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Please provide a team-name."), cancellationToken);
@@ -68,6 +75,7 @@ namespace BugooReborn.Bots
                     }
 
                     break;
+
                 default:
                     await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Sorry, my little 🤖 🧠 doesn't understand this yet! To nag a team about it's bug-jail bugs, use `@bugoo nag teamname`."), cancellationToken);
                     break;
@@ -78,6 +86,13 @@ namespace BugooReborn.Bots
         #endregion
 
         #region Private helpers
+
+        private string GetDefaultTeamName(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
+        {
+            var match = this.config.Value.ConversationWhitelist.Where(item => turnContext.Activity.Conversation.Id.Contains(item.ConversationId, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            return match.DefaultTeam;
+        }
 
         private async Task NagTeamName(string teamName, ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
@@ -225,7 +240,7 @@ namespace BugooReborn.Bots
             var userWhitelist = this.config.Value.UserWhitelist;
             var conversationWhitelist = this.config.Value.ConversationWhitelist;
 
-            return userWhitelist.Contains(senderId, StringComparer.OrdinalIgnoreCase) || conversationWhitelist.Contains(conversationId, StringComparer.OrdinalIgnoreCase);
+            return userWhitelist.Contains(senderId, StringComparer.OrdinalIgnoreCase) || conversationWhitelist.Any(item => item.ConversationId.Equals(conversationId, StringComparison.OrdinalIgnoreCase));
         }
 
         private static string GetActivitySummaryText(AzureDevOpsWorkItem workItem)
