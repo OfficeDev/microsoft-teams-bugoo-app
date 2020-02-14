@@ -1,4 +1,4 @@
-﻿# BugooReborn
+﻿# Bugoo
 
 Bot Framework v4 echo bot sample.
 
